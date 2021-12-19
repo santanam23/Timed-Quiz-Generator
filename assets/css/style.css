@@ -2,14 +2,24 @@
     box-sizing: border-box;
     font-family: sans-serif;
 }
-:root{
-    --hue: #1E90FF;
-    --hue-nuetral: #FAEBD7;
-    --hue-wrong: #DC143C;
-    --hue-correct: #7FFF00;
+:root {
+    --hue-neutral: 200;
+    --hue-wrong: 0;
+    --hue-correct: 145;
+  }
+  .section-title {
+	font-size: 4rem;
+	font-weight: 300;
+	color:black;
+	margin-bottom: 10px;
+	text-transform: uppercase;
+	letter-spacing: 0.2rem;
+	text-align: center;
+    padding-bottom: 20px;
+    width: 50%;
 }
-
 body {
+    --hue: var(--hue-neutral);
     padding: 0;
     margin:0%;
     display:flex;
@@ -17,7 +27,7 @@ body {
     height: 100vh;
     justify-content: center;
     align-items: center;
-    background-color: var(--hue);
+    background-color: hsl(var(--hue), 100%, 20%);
 }
 body.correct {
     --hue: var(--hue-correct); 
@@ -36,15 +46,16 @@ body.wrong {
 
 .btn-grid {
     display:grid;
-    grid-template-columns: repeat(2), auto;
+    grid-template-columns: repeat(2, auto);
     gap:10px;
     margin:20px 0;
 
 }
 .btn {
+    --hue: var(--hue-neutral);
     font-size: 1.5rem;
-    border:1px solid black;
-    background-color: var(--hue);
+    border: 1px solid hsl(var(--hue), 100%, 30%);
+    background-color: hsl(var(--hue), 100%, 50%);
     border-radius: 5px;
     padding: 5px 10px;
     color: white;
@@ -52,7 +63,7 @@ body.wrong {
 }
 
 .btn:hover {
-    border-color: hsl(0, 0%, 0%);
+    border-color: black;
 }
 .btn.correct {
     --hue: var(--hue-correct);
