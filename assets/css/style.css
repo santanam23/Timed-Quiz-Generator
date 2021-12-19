@@ -7,7 +7,7 @@
     --hue-wrong: 0;
     --hue-correct: 145;
   }
-  .section-title {
+  .title {
 	font-size: 4rem;
 	font-weight: 300;
 	color:black;
@@ -17,6 +17,10 @@
 	text-align: center;
     padding-bottom: 20px;
     width: 50%;
+}
+.timer {
+    width: 100px;
+    height: 700px;
 }
 body {
     --hue: var(--hue-neutral);
