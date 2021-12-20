@@ -1,167 +1,193 @@
-const startButton = document.getElementById('start-btn')
-const nextButton = document.getElementById('next-btn')
-const questionContainerElement = document.getElementById('question-container')
-const questionElements = document.getElementById('question')
-const answerButtonsElement = document.getElementById('answer-buttons')
+const start_btn = document.querySelector(".start_btn button");
+const info_box = document.querySelector(".info_box");
+const exit_btn = info_box.querySelector(".buttons .quit");
+const continue_btn = info_box.querySelector(".buttons .restart");
+const quiz_box = document.querySelector(".quiz_box");
+const result_box = document.querySelector(".result_box");
+const option_list = document.querySelector(".option_list");
+const time_line = document.querySelector("header .time_line");
+const timeText = document.querySelector(".timer .time_left_txt");
+const timeCount = document.querySelector(".timer .timer_sec");
 
-let shuffledQuestions, currentQuestionIndex
-
-startButton.addEventListener('click', startGame)
-nextButton.addEventListener('click', () => {
-    currentQuestionIndex++
-    setNextQuestion()
-  })
-
-
-function startGame() {
-    startButton.classList.add('hide')
-  shuffledQuestions = questions.sort(() => Math.random() - .5)
-  currentQuestionIndex = 0
-  questionContainerElement.classList.remove('hide')
-  setNextQuestion()
+start_btn.onclick = ()=>{
+    info_box.classList.add("activeInfo"); 
 }
 
-function setNextQuestion() {
-    resetState()
-    showQuestion(shuffledQuestions[currentQuestionIndex])
+exit_btn.onclick = ()=>{
+    info_box.classList.remove("activeInfo"); 
 }
 
-function showQuestion(question) {
-    questionElements.innerText = question.question
-    question.answers.forEach(answer => {
-      const button = document.createElement('button')
-      button.innerText = answer.text
-      button.classList.add('btn')
-      if (answer.correct) {
-        button.dataset.correct = answer.correct
-      }
-      button.addEventListener('click', selectAnswer)
-      answerButtonsElement.appendChild(button)
-    })
-  }
-  
-  function resetState() {
-    clearStatusClass(document.body)
-    nextButton.classList.add('hide')
-    while (answerButtonsElement.firstChild) {
-      answerButtonsElement.removeChild(answerButtonsElement.firstChild)
-    }
-  }
-  
-  function selectAnswer(e) {
-    const selectedButton = e.target
-    const correct = selectedButton.dataset.correct
-    setStatusClass(document.body, correct)
-    Array.from(answerButtonsElement.children).forEach(button => {
-      setStatusClass(button, button.dataset.correct)
-    })
-    if (shuffledQuestions.length > currentQuestionIndex + 1) {
-      nextButton.classList.remove('hide')
-    } else {
-      startButton.innerText = 'Restart'
-      startButton.classList.remove('hide')
-    }
-  }
-  
-  function setStatusClass(element, correct) {
-    clearStatusClass(element)
-    if (correct) {
-      element.classList.add('correct')
-    } else {
-      element.classList.add('wrong')
-    }
-  }
-  
-  function clearStatusClass(element) {
-    element.classList.remove('correct')
-    element.classList.remove('wrong')
-  }
-  
-  const questions = [
-    {
-      question: 'What is Javascript?',
-      answers: [
-        { text: 'a client-side and server-side script language inserted into Html pages', correct: true },
-        { text: 'Subject-based Programming language', correct: false }
-      ]
-    },
-    {
-      question: 'Who is the best Spider Man actor?',
-      answers: [
-        { text: 'Tom Holand', correct: true },
-        { text: 'Toby Maguire', correct: false },
-        { text: 'Andrew Garfield', correct: false },
-        { text: 'Nicolas Hammond', correct: false }
-      ]
-    },
-    {
-      question: 'What is the difference between Java & JavaScript?',
-      answers: [
-        { text: 'Javascript is an OOP programming language.', correct: false },
-        { text: 'Java code needs to be compiled.', correct: true },
-        { text: 'Java codes are all in the form of text.', correct: false },
-        { text: 'Java is run on a browser only.', correct: false }
-      ]
-    },
-    {
-        question: 'Which company developed JavaScript?',
-        answers: [
-          { text: 'Google developed Javascript.', correct: false },
-          { text: 'Elon Musk developed Javascript', correct: false },
-          { text: 'Netscape is the software company that developed JavaScript.', correct: true },
-          { text: 'Yahoo pages created Javascript', correct: false }
-        ]
-      },
-      {
-        question: 'What is a prompt box?',
-        answers: [
-          { text: 'A box that is often used if you want to make sure information comes through to the user.', correct: false },
-          { text: 'A prompt box is a box that allows the user to enter input by providing a text box.', correct: true },
-          { text: 'A box used if you want the user to verify or accept something.', correct: false },
-          { text: 'To display line breaks inside a popup box, use a back-slash followed by the character n.', correct: false }
-        ]
-      },
-      {
-        question: 'What are all the looping structures in JavaScript?',
-        answers: [
-          { text: 'GetElementBy', correct: false },
-          { text: 'For', correct: true },
-          { text: 'While', correct: true },
-          { text: 'Do-while loops.', correct: true }
-        ]
-      },
-    {
-      question: 'What are some data types supported by JavaScript?',
-      answers: [
-        { text: 'String', correct: true },
-        { text: 'Undefined', correct: true },
-        { text: 'Null', correct: true },
-        { text: 'Boolean', correct: true }
-      ]
-    }
-  ]
-  window.alert("Welcome To My Quiz! This Is A Timed Quiz. Good Luck!");
+continue_btn.onclick = ()=>{
+    info_box.classList.remove("activeInfo"); 
+    quiz_box.classList.add("activeQuiz"); 
+    showQuetions(0); 
+    queCounter(1); 
+    startTimer(30); 
+    startTimerLine(0); 
+}
+let timeValue =  30;
+let que_count = 0;
+let que_numb = 1;
+let userScore = 0;
+let counter;
+let counterLine;
+let widthValue = 0;
+const restart_quiz = result_box.querySelector(".buttons .restart");
+const quit_quiz = result_box.querySelector(".buttons .quit");
 
-  function startTimer(duration, display) {
-    var timer = duration, minutes, seconds;
-    setInterval(function () {
-        minutes = parseInt(timer / 60, 10);
-        seconds = parseInt(timer % 60, 10);
+restart_quiz.onclick = ()=>{
+    quiz_box.classList.add("activeQuiz"); 
+    result_box.classList.remove("activeResult"); 
+    timeValue = 30; 
+    que_count = 0;
+    que_numb = 1;
+    userScore = 0;
+    widthValue = 0;
+    showQuetions(que_count); 
+    queCounter(que_numb);
+    clearInterval(counter); 
+    clearInterval(counterLine); 
+    startTimer(timeValue); 
+    startTimerLine(widthValue); 
+    timeText.textContent = "Time Left"; 
+    next_btn.classList.remove("show"); 
+}
 
-        minutes = minutes < 10 ? "0" + minutes : minutes;
-        seconds = seconds < 10 ? "0" + seconds : seconds;
+quit_quiz.onclick = ()=>{
+    window.location.reload(); 
+}
+const next_btn = document.querySelector("footer .next_btn");
+const bottom_ques_counter = document.querySelector("footer .total_que");
 
-        display.textContent = minutes + ":" + seconds;
+next_btn.onclick = ()=>{
+    if(que_count < questions.length - 1){ 
+        que_count++; 
+        que_numb++; 
+        showQuetions(que_count); 
+        queCounter(que_numb); 
+        clearInterval(counter); 
+        clearInterval(counterLine); 
+        startTimer(timeValue); 
+        startTimerLine(widthValue);
+        timeText.textContent = "Time Left"; 
+        next_btn.classList.remove("show"); 
+    }else{
+        clearInterval(counter);
+        clearInterval(counterLine); 
+        showResult(); 
+    }
+}
 
-        if (--timer < 0) {
-            timer = duration;
-        alert("You're out of time!");    
+function showQuetions(index){
+    const que_text = document.querySelector(".que_text");
+    
+    let que_tag = '<span>'+ questions[index].numb + ". " + questions[index].question +'</span>';
+    let option_tag = '<div class="option"><span>'+ questions[index].options[0] +'</span></div>'
+    + '<div class="option"><span>'+ questions[index].options[1] +'</span></div>'
+    + '<div class="option"><span>'+ questions[index].options[2] +'</span></div>'
+    + '<div class="option"><span>'+ questions[index].options[3] +'</span></div>';
+    que_text.innerHTML = que_tag; 
+    option_list.innerHTML = option_tag; 
+    
+    const option = option_list.querySelectorAll(".option");
+   
+    for(i=0; i < option.length; i++){
+        option[i].setAttribute("onclick", "optionSelected(this)");
+    }
+}
+
+let tickIconTag = '<div class="icon tick"><i class="fas fa-check"></i></div>';
+let crossIconTag = '<div class="icon cross"><i class="fas fa-times"></i></div>';
+
+function optionSelected(answer){
+    clearInterval(counter); 
+    clearInterval(counterLine); 
+    let userAns = answer.textContent; 
+    let correcAns = questions[que_count].answer; 
+    const allOptions = option_list.children.length; 
+    
+    if(userAns == correcAns){ 
+        userScore += 1; 
+        answer.classList.add("correct"); 
+        answer.insertAdjacentHTML("beforeend", tickIconTag); 
+        console.log("Correct Answer");
+        console.log("Your correct answers = " + userScore);
+    }else{
+        answer.classList.add("incorrect"); 
+        answer.insertAdjacentHTML("beforeend", crossIconTag);
+        console.log("Wrong Answer");
+        for(i=0; i < allOptions; i++){
+            if(option_list.children[i].textContent == correcAns){  
+                option_list.children[i].setAttribute("class", "option correct"); 
+                option_list.children[i].insertAdjacentHTML("beforeend", tickIconTag); 
+                console.log("Auto selected correct answer.");
+            }
         }
-    }, 1000);
+    }
+    for(i=0; i < allOptions; i++){
+        option_list.children[i].classList.add("disabled"); 
+    }
+    next_btn.classList.add("show");
 }
-
-window.onload = function () {
-    var fiveMinutes = 60 * 5,
-        display = document.querySelector('#time');
-    startTimer(fiveMinutes, display);
-};
+function showResult(){
+    info_box.classList.remove("activeInfo"); 
+    quiz_box.classList.remove("activeQuiz"); 
+    result_box.classList.add("activeResult"); 
+    const scoreText = result_box.querySelector(".score_text");
+    if (userScore > 3){ 
+        
+        let scoreTag = '<span>and congrats! , You got <p>'+ userScore +'</p> out of <p>'+ questions.length +'</p></span>';
+        scoreText.innerHTML = scoreTag;  
+    }
+    else if(userScore > 1){ 
+        let scoreTag = '<span>and nice , You got <p>'+ userScore +'</p> out of <p>'+ questions.length +'</p></span>';
+        scoreText.innerHTML = scoreTag;
+    }
+    else{ 
+        let scoreTag = '<span>and sorry , You got only <p>'+ userScore +'</p> out of <p>'+ questions.length +'</p></span>';
+        scoreText.innerHTML = scoreTag;
+    }
+}
+function startTimer(time){
+    counter = setInterval(timer, 1000);
+    function timer(){
+        timeCount.textContent = time; 
+        time--; 
+        if(time < 9){ 
+            let addZero = timeCount.textContent; 
+            timeCount.textContent = "0" + addZero; 
+        }
+        if(time < 0){ 
+            clearInterval(counter); 
+            timeText.textContent = "Time Off"; 
+            const allOptions = option_list.children.length; 
+            let correcAns = questions[que_count].answer; 
+            for(i=0; i < allOptions; i++){
+                if(option_list.children[i].textContent == correcAns){ 
+                    option_list.children[i].setAttribute("class", "option correct"); 
+                    option_list.children[i].insertAdjacentHTML("beforeend", tickIconTag); 
+                    console.log("Time Off: Auto selected correct answer.");
+                }
+            }
+            for(i=0; i < allOptions; i++){
+                option_list.children[i].classList.add("disabled"); 
+            }
+            next_btn.classList.add("show"); 
+        }
+    }
+}
+function startTimerLine(time){
+    counterLine = setInterval(timer, 29);
+    function timer(){
+        time += 1; 
+        time_line.style.width = time + "px"; 
+        if(time > 549){ 
+            clearInterval(counterLine); 
+        }
+    }
+}
+function queCounter(index){
+   
+    let totalQueCounTag = '<span><p>'+ index +'</p> of <p>'+ questions.length +'</p> Questions</span>';
+    bottom_ques_counter.innerHTML = totalQueCounTag;  
+}
